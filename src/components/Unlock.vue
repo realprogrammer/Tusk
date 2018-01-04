@@ -124,6 +124,10 @@
 						text: "Do not remember"
 					},
 					{
+						time: 1,
+						text: "Remember for 1 min."
+					},
+					{
 						time: 30,
 						text: "Remember for 30 min."
 					},

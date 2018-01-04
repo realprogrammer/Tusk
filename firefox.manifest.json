@@ -57,6 +57,7 @@
 		"storage",
 		"clipboardWrite",
 		"identity",
+		"idle",
 		"alarms",
 		"notifications",
 		"https://*/*",

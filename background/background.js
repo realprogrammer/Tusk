@@ -15,6 +15,16 @@ function Background(protectedMemory, settings) {
 	chrome.runtime.onInstalled.addListener(settings.upgrade);
 	chrome.runtime.onStartup.addListener(forgetStuff);
 
+	// handle idle state changes and properly clear cached data
+	chrome.idle.setDetectionInterval(30 /* seconds == 2 min */)
+	chrome.idle.onStateChanged.addListener(newState => {
+		// https://developer.chrome.com/apps/idle#type-IdleState
+		if (newState === 'active'){
+			forgetStuff()
+		}
+		console.log("Resumed from idle.")
+	})
+
 	//keep saved state for the popup for as long as we are alive (not long):
 	chrome.runtime.onConnect.addListener(function(port) {
 		//communicate state on this pipe.  each named port gets its own state.
@@ -53,7 +63,7 @@ function Background(protectedMemory, settings) {
 		if (message.m == "showMessage") {
 			chrome.notifications.create({
 				'type': 'basic',
-				'iconUrl': 'assets/icons/logo_48.png',
+				'iconUrl': 'logo_48.png',
 				'title': 'Tusk',
 				'message': message.text
 			}, function(notificationId) {
