@@ -20,13 +20,17 @@ function OneDriveFileManager(settings) {
 		accessTokenType: accessTokenType,
 		authUrl: 'https://login.live.com/oauth20_authorize.srf?response_type=token' +
 			'&scope=' + encodeURIComponent('onedrive.readonly'),
-		supportedFeatures: ['listDatabases'],
+		supportedFeatures: ['listDatabases', 'isEditable'],
 		origins: ['https://login.live.com/'],
 		title: 'OneDrive',
 		icon: 'icon-onedrive',
 		chooseTitle: 'OneDrive',
 		chooseDescription: 'Access password files stored on OneDrive.  Files will be retrieved from OneDrive each time they are used.',
 	};
+
+	oauth.isEditable = function() {
+		return false;
+	}
 
 	oauth.searchRequestFunction = function(token) {
 		var query = 'kdbx';

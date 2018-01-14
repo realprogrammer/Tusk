@@ -23,7 +23,7 @@ function GoogleDrivePasswordFileManager(settings) {
 	var oauth = {
 		key: accessTokenType,
 		accessTokenType: accessTokenType,
-		supportedFeatures: ['listDatabases'],
+		supportedFeatures: ['listDatabases', 'isEditable'],
 		authUrl: 'https://accounts.google.com/o/oauth2/v2/auth?response_type=token' +
 			'&scope=' + encodeURIComponent('https://www.googleapis.com/auth/drive.readonly'),
 		origins: [
@@ -36,6 +36,10 @@ function GoogleDrivePasswordFileManager(settings) {
 		chooseTitle: 'Google Drive',
 		chooseDescription: 'Access password files stored on your Google Drive.  The file(s) will be fetched from Google Drive each time they are used.',
 	};
+
+	oauth.isEditable = function() {
+		return false;
+	}
 
 	oauth.searchRequestFunction = function(token) {
 		var request = {
@@ -76,7 +80,6 @@ function GoogleDrivePasswordFileManager(settings) {
 				}
 			}
 			return axios(requestmeta).then(response => {
-				console.log(response)
 				var requestfile = {
 					method: 'GET',
 					url: response.data.downloadUrl,

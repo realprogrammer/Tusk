@@ -297,11 +297,11 @@
 					this.unlockedMessages['error'] = "No matches found for this site."
 				}
 
-				// Cache in memory 
+				// Cache in popup page memory 
 				this.unlockedState.cacheSet('allEntries', allEntries)
 				this.unlockedState.cacheSet('priorityEntries', priorityEntries)
 				this.$forceUpdate()
-				//save longer term (in encrypted storage)
+				// Cache longer in background page memory
 				this.secureCache.save('secureCache.entries', entries);
 				this.busy = false
 			},
@@ -322,9 +322,10 @@
 					this.selectedKeyFile.name :
 					undefined
 				passwordKeyPromise.then(passwordKey => {
-					this.keepassService.getDecryptedData(passwordKey).then(decryptedData => {
-						let entries = decryptedData.entries
-						let version = decryptedData.version
+					this.keepassService.getDecryptedData(passwordKey).then(decryptedDatabase => {
+						this.unlockedState.cacheSet('currentDB', decryptedDatabase)
+						let entries = this.keepassService.getProcessedEntryList(decryptedDatabase)
+						let version = this.keepassService.getDatabaseVersion(decryptedDatabase)
 						let dbUsage = {
 							requiresPassword: passwordKey.passwordHash === null ? false : true,
 							requiresKeyfile: passwordKey.keyFileHash === null ? false : true,

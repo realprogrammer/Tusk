@@ -73,6 +73,7 @@ function UnlockedState($router, keepassReference, protectedMemory, settings) {
 		my.cache = {}
 	}
 
+	// This cache is in popup memory.  It disappears once the popup is closed...
 	my.cacheSet = function(key, val) {
 		// Refresh cache
 		clearTimeout(cacheTimeoutId)

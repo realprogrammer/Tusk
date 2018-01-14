@@ -140,9 +140,18 @@ function OauthManager(settings, oauth) {
 
 	//given minimal file information, retrieve the actual file
 	function getChosenDatabaseFile(dbInfo, attempt) {
+		/* 
+			Returns an object of type file_obj = {
+				"buffer": ArrayBuffer,
+				"editable": Boolean // whether or not the file_obj + provider supports edit/save
+			}
+		*/
 		return getToken().then(function(accessToken) {
 			return oauth.fileRequestFunction(dbInfo, accessToken).then(function(response) {
-				return response.data
+				return {
+					buffer: response.data,
+					editable: oauth.isEditable()
+				}
 			}).catch(function(error) {
 				console.error("Get chosen file failure:", error)
 				if (error.response === undefined)

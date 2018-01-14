@@ -43,29 +43,29 @@ function KeepassService(keepassHeader, settings, passwordFileStoreRegistry, keep
 	}
 
 	my.getDecryptedData = function(masterKey) {
-		var majorVersion;
-		return passwordFileStoreRegistry.getChosenDatabaseFile(settings).then(function(buf) {
+		return passwordFileStoreRegistry.getChosenDatabaseFile(settings).then(function(dbfile) {
+			let buf = dbfile.buffer;
 			var h = keepassHeader.readHeader(buf);
 			if (!h) throw new Error('Failed to read file header');
 
 			if (h.kdbx) { // KDBX - use kdbxweb library
 				kdbxweb.CryptoEngine.argon2 = argon2;
 				var kdbxCreds = jsonCredentialsToKdbx(masterKey);
-				return kdbxweb.Kdbx.load(buf, kdbxCreds).then(db => {
-					var psk = new Uint8Array(db.header.protectedStreamKey, 0, db.header.protectedStreamKey.length);
-					var entries = parseKdbxDb(db.groups);
-					majorVersion = db.header.versionMajor;
-					return processReferences(entries, majorVersion);
-				});
-			} else { // KDB - we don't support this anymore
-				throw "Unsupported Database Version";
+				return kdbxweb.Kdbx.load(buf, kdbxCreds);
+			} else {      // KDB - we don't support this anymore
+				throw "Unsupported Database Version.  Tusk supports KeePass 2.X";
 			}
-		}).then(function(entries) {
-			return {
-				entries: entries,
-				version: majorVersion
-			};
 		});
+	}
+
+	my.getProcessedEntryList = function(kdbxweb_db) {
+		let entries = parseKdbxDb(kdbxweb_db.groups);
+		let majorVersion = kdbxweb_db.header.versionMajor;
+		return processReferences(entries, majorVersion);
+	}
+
+	my.getDatabaseVersion = function(kdbxweb_db) {
+		return kdbxweb_db.header.majorVersion;
 	}
 
 	function getKey(isKdbx, masterPassword, fileKey) {

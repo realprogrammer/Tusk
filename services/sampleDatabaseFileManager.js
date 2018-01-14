@@ -13,7 +13,7 @@ function SampleDatabaseFileManager() {
 		listDatabases: listDatabases,
 		getDatabaseChoiceData: getDatabaseChoiceData,
 		getChosenDatabaseFile: getChosenDatabaseFile,
-		supportedFeatures: ['ingognito', 'listDatabases'],
+		supportedFeatures: ['ingognito', 'listDatabases', 'isEditable'],
 		title: 'Sample',
 		permissions: [],
 		icon: 'icon-flask',
@@ -32,6 +32,10 @@ function SampleDatabaseFileManager() {
 
 	function logout() {
 		return setActive(false)
+	}
+
+	function isEditable() {
+		return false;
 	}
 
 	function listDatabases() {
@@ -60,7 +64,10 @@ function SampleDatabaseFileManager() {
 			url: chrome.extension.getURL('/dist/Sample123.kdbx'),
 			responseType: 'arraybuffer'
 		}).then(function(response) {
-			return response.data;
+			return {
+				buffer: response.data,
+				editable: false
+			}
 		});
 	}
 

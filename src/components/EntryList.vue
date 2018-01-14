@@ -14,7 +14,10 @@
 				<entry-list-item v-for="entry in filteredEntries" :key="entry.id" :entry="entry" :unlocked-state="unlockedState">
 				</entry-list-item>
 			</div>
+			<div v-if="unlockedState.editable" class="newitem entry-list-item selectable blue">
+				<span><i class="fa fa-plus-circle" aria-hidden="true"></i> Create New Entry</span></div>
 		</div>
+		<!-- <a class="addnew btn-floating btn-large waves-effect waves-light blue"><i class="material-icons">+</i></a> -->
 	</div>
 </template>
 
@@ -97,6 +100,10 @@
 		border-bottom: 2px solid $light-gray;
 		height: 350px;
 		overflow-y: auto;
+	}
+
+	.newitem {
+		font-size: 14px;
 	}
 
 	.search {

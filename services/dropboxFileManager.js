@@ -21,12 +21,17 @@ function DropboxFileManager(settings) {
 		accessTokenType: accessTokenType,
 		origins: ['https://*.dropbox.com/'],
 		authUrl: 'https://www.dropbox.com/oauth2/authorize?response_type=token&force_reapprove=false',
-		supportedFeatures: ['ingognito', 'listDatabases'],
+		supportedFeatures: ['ingognito', 'listDatabases', 'isEditable'],
 		title: 'Dropbox',
 		icon: 'icon-dropbox',
 		chooseTitle: 'Dropbox',
 		chooseDescription: 'Access password files stored on Dropbox.  Files will be retrieved from Dropbox each time they are used.',
 	};
+
+	oauth.isEditable = function() {
+		// Check state to see if we are editable.
+		return true
+	}
 
 	oauth.searchRequestFunction = function(token) {
 		return axios({

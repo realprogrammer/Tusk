@@ -72,7 +72,10 @@ function SharedUrlFileManager() {
 			responseType: 'arraybuffer',
 			cache: true
 		}).then(function(response) {
-			return response.data;
+			return {
+				buffer: response.data,
+				editable: false
+			}
 		});
 	}
 
